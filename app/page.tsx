@@ -243,7 +243,7 @@ export default function BirthdayInvitation() {
           </h3>
           <p className="text-lg md:text-xl mb-4 text-center text-pink-200">
             <a 
-              href="https://www.google.com/maps/place/Pastel+Poetry/@12.9556429,79.1344595,17z/"
+              href="https://maps.app.goo.gl/rV2o3b9xn641naVK9"
               className="hover:text-pink-300 transition-colors"
               target="_blank"
               rel="noopener noreferrer"
