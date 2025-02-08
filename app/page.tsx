@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion, useAnimation, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { Pacifico } from "next/font/google"
 import confetti from "canvas-confetti"
 import { PartyPopper, Cake, Music, Gift } from "lucide-react"
@@ -29,6 +29,8 @@ const Sparkle = ({ style }: { style: React.CSSProperties }) => (
       ...style,
       width: "4px",
       height: "4px",
+      background: "white",
+      borderRadius: "50%",
     }}
     initial={{ scale: 0, opacity: 1 }}
     animate={{
@@ -44,21 +46,35 @@ const Sparkle = ({ style }: { style: React.CSSProperties }) => (
 )
 
 const FloatingObject = ({ emoji, index }: { emoji: string; index: number }) => {
-  const randomX = Math.random() * window.innerWidth;
-  const randomDelay = Math.random() * 5;
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+    
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
+
+  const randomX = Math.random() * (dimensions.width || 1000);
   
   return (
     <motion.div
       className="absolute text-2xl pointer-events-none"
       initial={{ x: randomX, y: -20 }}
       animate={{
-        y: window.innerHeight + 20,
+        y: (dimensions.height || 1000) + 20,
         rotate: [0, 360],
       }}
       transition={{
         duration: 15 + Math.random() * 10,
         repeat: Infinity,
-        delay: randomDelay,
+        delay: index * 0.5,
         ease: "linear"
       }}
     >
@@ -71,6 +87,11 @@ export default function BirthdayInvitation() {
   const [showConfetti, setShowConfetti] = useState(false)
   const [sparkles, setSparkles] = useState<Array<{ id: number; style: React.CSSProperties }>>([])
   const [user, setUser] = useState<any>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     const createSparkles = () => {
@@ -129,7 +150,6 @@ export default function BirthdayInvitation() {
         const result = await signInWithPopup(auth, googleProvider);
         setUser(result.user);
         
-        // Add user RSVP to Firestore
         await addDoc(collection(db, 'rsvps'), {
           name: result.user.displayName,
           email: result.user.email,
@@ -144,10 +164,10 @@ export default function BirthdayInvitation() {
 
   const floatingEmojis = ['✨', '🎵', '🎪', '🎭', '🎨', '🎪'];
 
-  return (
-    <div className="min-h-screen overflow-hidden relative">
-      <div className="moving-background"></div>
+  if (!mounted) return null;
 
+  return (
+    <div className="min-h-screen overflow-hidden relative bg-gradient-to-b from-purple-900 via-blue-900 to-black">
       {sparkles.map((sparkle) => (
         <Sparkle key={sparkle.id} style={sparkle.style} />
       ))}
@@ -158,7 +178,7 @@ export default function BirthdayInvitation() {
 
       <header className="pt-16 pb-8 text-center relative z-10">
         <motion.div
-          className={`text-5xl md:text-7xl font-bold ${pacifico.className} text-white`}
+          className={`text-5xl md:text-7xl font-bold ${pacifico.className}`}
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
@@ -188,7 +208,7 @@ export default function BirthdayInvitation() {
         </section>
 
         <motion.section 
-          className="mb-16 text-center card-glow bg-black/30 backdrop-blur-lg rounded-2xl p-8 max-w-2xl mx-auto"
+          className="mb-16 text-center bg-black/30 backdrop-blur-lg rounded-2xl p-8 max-w-2xl mx-auto border border-white/10"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
@@ -207,22 +227,30 @@ export default function BirthdayInvitation() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9 }}
           >
-            <p className="text-xl md:text-2xl text-pink-200" >Date: [9th, February]</p>
-            <p className="text-xl md:text-2xl text-blue-200">Time: [7 P.M]</p>
+            <p className="text-xl md:text-2xl text-pink-200">Date: February 9th</p>
+            <p className="text-xl md:text-2xl text-blue-200">Time: 7:00 PM</p>
           </motion.div>
         </motion.section>
 
         <motion.section 
-          className="mb-16 card-glow bg-black/30 backdrop-blur-lg rounded-2xl p-8 max-w-2xl mx-auto"
+          className="mb-16 bg-black/30 backdrop-blur-lg rounded-2xl p-8 max-w-2xl mx-auto border border-white/10"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 1.1 }}
         >
           <h3 className="text-2xl md:text-4xl font-bold mb-4 text-center text-white">
-            <a href="https://www.google.com/maps/place/Pastel+Poetry/@12.9556429,79.1344595,17z/data=!3m1!4b1!4m6!3m5!1s0x3bad47842fea816b:0x56d219c0044e50e9!8m2!3d12.9556429!4d79.1370344!16s%2Fg%2F11y3klt3bp?entry=ttu&g_ep=EgoyMDI1MDIwNS4xIKXMDSoASAFQAw%3D%3D"> Venue</a></h3>
+            Venue
+          </h3>
           <p className="text-lg md:text-xl mb-4 text-center text-pink-200">
-            <a href="https://www.google.com/maps/place/Pastel+Poetry/@12.9556429,79.1344595,17z/data=!3m1!4b1!4m6!3m5!1s0x3bad47842fea816b:0x56d219c0044e50e9!8m2!3d12.9556429!4d79.1370344!16s%2Fg%2F11y3klt3bp?entry=ttu&g_ep=EgoyMDI1MDIwNS4xIKXMDSoASAFQAw%3D%3D">
-            Pastel Poetry - Chittoor Rd, Gandhi Nagar, Vellore, Tamil Nadu 632006
+            <a 
+              href="https://www.google.com/maps/place/Pastel+Poetry/@12.9556429,79.1344595,17z/"
+              className="hover:text-pink-300 transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Pastel Poetry<br />
+              Chittoor Rd, Gandhi Nagar<br />
+              Vellore, Tamil Nadu 632006
             </a>
           </p>
         </motion.section>
@@ -241,7 +269,7 @@ export default function BirthdayInvitation() {
 
       <footer className="text-center pb-8 relative z-10">
         <motion.p 
-          className="text-sm text-white"
+          className="text-sm text-white/80"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.3 }}
@@ -249,6 +277,15 @@ export default function BirthdayInvitation() {
           Can't wait to celebrate with you!
         </motion.p>
       </footer>
+
+      <style jsx global>{`
+        .sparkle {
+          position: absolute;
+          pointer-events: none;
+          background: white;
+          border-radius: 50%;
+        }
+      `}</style>
     </div>
   )
 }
