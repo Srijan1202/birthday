@@ -207,8 +207,8 @@ export default function BirthdayInvitation() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9 }}
           >
-            <p className="text-xl md:text-2xl text-pink-200">Date: [Your Birthday Date]</p>
-            <p className="text-xl md:text-2xl text-blue-200">Time: [Party Time]</p>
+            <p className="text-xl md:text-2xl text-pink-200" >Date: [9th, February]</p>
+            <p className="text-xl md:text-2xl text-blue-200">Time: [7 P.M]</p>
           </motion.div>
         </motion.section>
 
@@ -218,10 +218,12 @@ export default function BirthdayInvitation() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 1.1 }}
         >
-          <h3 className="text-2xl md:text-4xl font-bold mb-4 text-center text-white">Venue</h3>
+          <h3 className="text-2xl md:text-4xl font-bold mb-4 text-center text-white">
+            <a href="https://www.google.com/maps/place/Pastel+Poetry/@12.9556429,79.1344595,17z/data=!3m1!4b1!4m6!3m5!1s0x3bad47842fea816b:0x56d219c0044e50e9!8m2!3d12.9556429!4d79.1370344!16s%2Fg%2F11y3klt3bp?entry=ttu&g_ep=EgoyMDI1MDIwNS4xIKXMDSoASAFQAw%3D%3D"> Venue</a></h3>
           <p className="text-lg md:text-xl mb-4 text-center text-pink-200">
-            Rangalaya Kalyana Mandapam, No. 60, Vellore - Katpadi Main Road, 4th East Main Road, Gandhinagar, Vellore,
-            Tamil Nadu 632006
+            <a href="https://www.google.com/maps/place/Pastel+Poetry/@12.9556429,79.1344595,17z/data=!3m1!4b1!4m6!3m5!1s0x3bad47842fea816b:0x56d219c0044e50e9!8m2!3d12.9556429!4d79.1370344!16s%2Fg%2F11y3klt3bp?entry=ttu&g_ep=EgoyMDI1MDIwNS4xIKXMDSoASAFQAw%3D%3D">
+            Pastel Poetry - Chittoor Rd, Gandhi Nagar, Vellore, Tamil Nadu 632006
+            </a>
           </p>
         </motion.section>
 
